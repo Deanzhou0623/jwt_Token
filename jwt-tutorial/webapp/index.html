@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<form method="post" action="">
+  <input type="text" name="userName"/> <br>
+  <input type="password" name="pwd"/> <br>
+  <input type="button" id="submitBtn" value="提交"/> <br>
+</form>
+
+<a href="#" id="list">列出用户列表</a>
+
+<script>
+  $("#list").click(function () {
+    var param = {
+      // 使用请求参数传递
+      // 'token':localStorage.getItem("token")+1
+      'token':localStorage.getItem("token")
+    }
+    $.ajax({
+      url:'http://localhost:8080/jwt_demo_war_exploded/user2?type=list',
+      type:'post',
+      data:param,
+      // 使用请求 头传递
+      beforeSend:function(xhr) {
+        // xhr.setRequestHeader("Authorization",localStorage.getItem("token")+1)
+        xhr.setRequestHeader("Authorization",localStorage.getItem("token"))
+      },
+      success:function (result) {
+        console.log(result);
+      }
+    });
+  });
+  $("#submitBtn").click(function () {
+    var param = {
+      'userName':$("input[name=userName]").val(),
+      'pwd':$("input[name=pwd]").val()
+    }
+    $.ajax({
+      url:'http://localhost:8080/jwt_demo_war_exploded/user2?type=login',
+      type:'post',
+      data:param,
+      success:function (result) {
+        console.log(result);
+        // 前端存储
+        localStorage.setItem("token",result.token);
+      }
+    });
+  });
+
+
+</script>
+
+</body>
+</html>
